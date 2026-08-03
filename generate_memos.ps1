@@ -23,9 +23,10 @@ $ErrorActionPreference = "Stop"
 
 function Get-DocxText {
     param([string]$DocxPath)
-    $tempExtract = Join-Path $env:TEMP ("docx_extract_" + [guid]::NewGuid().ToString("N"))
+    $tempDir = [System.IO.Path]::GetTempPath()
+    $tempExtract = Join-Path $tempDir ("docx_extract_" + [guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Path $tempExtract -Force | Out-Null
-    $tempZip = Join-Path $env:TEMP ([guid]::NewGuid().ToString("N") + ".zip")
+    $tempZip = Join-Path $tempDir ([guid]::NewGuid().ToString("N") + ".zip")
     Copy-Item -LiteralPath $DocxPath -Destination $tempZip
     Expand-Archive -Path $tempZip -DestinationPath $tempExtract -Force
     Remove-Item -LiteralPath $tempZip -Force
